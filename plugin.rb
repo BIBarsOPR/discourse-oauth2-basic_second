@@ -293,7 +293,7 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       else
         result = Auth::Result.new
         result.failed = true
-        result.failed_reason = I18n.t("login_second.authenticator_error_fetch_user_details")
+        result.failed_reason = I18n.t("login.authenticator_error_fetch_user_details")
         return result
       end
     end

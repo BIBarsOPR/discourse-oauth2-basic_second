@@ -5,7 +5,7 @@
 # https://translate.discourse.org/
 
 ru:
-  login_second:
+  login:
     authenticator_error_fetch_user_details: "Не удалось получить данные пользователя. У вас есть активный аккаунт?"
   site_settings:
     oauth2_enabled_second: "Пользовательский OAuth2 включен"

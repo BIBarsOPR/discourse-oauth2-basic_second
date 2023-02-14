@@ -1,4 +1,4 @@
-login_second:
+login:
   oauth2_enabled_second:
     default: false
     client: true

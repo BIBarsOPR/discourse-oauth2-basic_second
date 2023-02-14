@@ -1,5 +1,5 @@
 en:
-  login_second:
+  login:
     authenticator_error_fetch_user_details: "Could not retrieve your user details. Do you have an active account?"
 
   site_settings:
