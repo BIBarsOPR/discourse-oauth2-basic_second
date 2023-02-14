@@ -1,52 +1,52 @@
-login:
-  oauth2_enabled:
+login_second:
+  oauth2_enabled_second:
     default: false
     client: true
-  oauth2_client_id: ""
-  oauth2_client_secret: ""
-  oauth2_authorize_url: ""
-  oauth2_authorize_signup_url: ""
-  oauth2_token_url: ""
-  oauth2_token_url_method:
+  oauth2_client_id_second: ""
+  oauth2_client_secret_second: ""
+  oauth2_authorize_url_second: ""
+  oauth2_authorize_signup_url_second: ""
+  oauth2_token_url_second: ""
+  oauth2_token_url_method_second:
     default: "POST"
     type: enum
     choices:
       - GET
       - POST
-  oauth2_callback_user_id_path: ""
-  oauth2_callback_user_info_paths:
+  oauth2_callback_user_id_path_second: ""
+  oauth2_callback_user_info_paths_second:
     type: list
     default: "id"
-  oauth2_fetch_user_details:
+  oauth2_fetch_user_details_second:
     default: true
     validator: "Oauth2FetchUserDetailsValidator"
-  oauth2_user_json_url: ""
-  oauth2_user_json_url_method:
+  oauth2_user_json_url_second: ""
+  oauth2_user_json_url_method_second:
     default: "GET"
     type: enum
     choices:
       - GET
       - POST
-  oauth2_json_user_id_path: ""
-  oauth2_json_username_path: ""
-  oauth2_json_name_path: ""
-  oauth2_json_email_path: ""
-  oauth2_json_email_verified_path: ""
-  oauth2_json_avatar_path: ""
-  oauth2_email_verified: false
-  oauth2_overrides_email: false
-  oauth2_send_auth_header: true
-  oauth2_send_auth_body: true
-  oauth2_debug_auth: false
-  oauth2_authorize_options:
+  oauth2_json_user_id_path_second: ""
+  oauth2_json_username_path_second: ""
+  oauth2_json_name_path_second: ""
+  oauth2_json_email_path_second: ""
+  oauth2_json_email_verified_path_second: ""
+  oauth2_json_avatar_path_second: ""
+  oauth2_email_verified_second: false
+  oauth2_overrides_email_second: false
+  oauth2_send_auth_header_second: true
+  oauth2_send_auth_body_second: true
+  oauth2_debug_auth_second: false
+  oauth2_authorize_options_second:
     default: "scope"
     type: list
-  oauth2_scope: ""
-  oauth2_button_title:
+  oauth2_scope_second: ""
+  oauth2_button_title_second:
     default: "with OAuth2"
     client: true
-  oauth2_allow_association_change:
+  oauth2_allow_association_change_second:
     default: false
-  oauth2_disable_csrf:
+  oauth2_disable_csrf_second:
     default: false
     hidden: true

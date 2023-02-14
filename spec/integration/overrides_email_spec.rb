@@ -11,10 +11,10 @@ describe "OAuth2 Overrides Email", type: :request do
   end
 
   before do
-    SiteSetting.oauth2_enabled = true
-    SiteSetting.oauth2_callback_user_id_path = "uid"
-    SiteSetting.oauth2_fetch_user_details = false
-    SiteSetting.oauth2_email_verified = true
+    SiteSetting.oauth2_enabled_second = true
+    SiteSetting.oauth2_callback_user_id_path_second = "uid"
+    SiteSetting.oauth2_fetch_user_details_second = false
+    SiteSetting.oauth2_email_verified_second = true
 
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:oauth2_basic] = OmniAuth::AuthHash.new(
@@ -39,7 +39,7 @@ describe "OAuth2 Overrides Email", type: :request do
   end
 
   it "updates user email if enabled" do
-    SiteSetting.oauth2_overrides_email = true
+    SiteSetting.oauth2_overrides_email_second = true
 
     get "/auth/oauth2_basic/callback"
     expect(response.status).to eq(302)

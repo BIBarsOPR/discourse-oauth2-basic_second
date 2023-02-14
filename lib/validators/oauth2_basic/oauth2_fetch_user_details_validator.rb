@@ -7,10 +7,10 @@ class Oauth2FetchUserDetailsValidator
 
   def valid_value?(val)
     return true if val == "t"
-    SiteSetting.oauth2_callback_user_id_path.length > 0
+    SiteSetting.oauth2_callback_user_id_path_second.length > 0
   end
 
   def error_message
-    I18n.t("site_settings.errors.oauth2_fetch_user_details")
+    I18n.t("site_settings.errors_second.oauth2_fetch_user_details")
   end
 end

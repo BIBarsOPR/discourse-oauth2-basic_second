@@ -22,7 +22,7 @@ describe OAuth2BasicAuthenticator do
       )
     end
 
-    before(:each) { SiteSetting.oauth2_email_verified = true }
+    before(:each) { SiteSetting.oauth2_email_verified_second = true }
 
     it "finds user by email" do
       authenticator.expects(:fetch_user_details).returns(email: user.email)
@@ -31,28 +31,28 @@ describe OAuth2BasicAuthenticator do
     end
 
     it "validates user email if provider has verified" do
-      SiteSetting.oauth2_email_verified = false
+      SiteSetting.oauth2_email_verified_second = false
       authenticator.stubs(:fetch_user_details).returns(email: user.email, email_verified: true)
       result = authenticator.after_authenticate(auth)
       expect(result.email_valid).to eq(true)
     end
 
     it "doesn't validate user email if provider hasn't verified" do
-      SiteSetting.oauth2_email_verified = false
+      SiteSetting.oauth2_email_verified_second = false
       authenticator.stubs(:fetch_user_details).returns(email: user.email, email_verified: nil)
       result = authenticator.after_authenticate(auth)
       expect(result.email_valid).to eq(false)
     end
 
     it "doesn't affect the site setting" do
-      SiteSetting.oauth2_email_verified = true
+      SiteSetting.oauth2_email_verified_second = true
       authenticator.stubs(:fetch_user_details).returns(email: user.email, email_verified: false)
       result = authenticator.after_authenticate(auth)
       expect(result.email_valid).to eq(true)
     end
 
     it "handles true/false strings from identity provider" do
-      SiteSetting.oauth2_email_verified = false
+      SiteSetting.oauth2_email_verified_second = false
       authenticator.stubs(:fetch_user_details).returns(email: user.email, email_verified: "true")
       result = authenticator.after_authenticate(auth)
       expect(result.email_valid).to eq(true)
@@ -64,10 +64,10 @@ describe OAuth2BasicAuthenticator do
 
     describe "fetch_user_details" do
       before(:each) do
-        SiteSetting.oauth2_fetch_user_details = true
-        SiteSetting.oauth2_user_json_url = "https://provider.com/user"
-        SiteSetting.oauth2_user_json_url_method = "GET"
-        SiteSetting.oauth2_json_email_path = "account.email"
+        SiteSetting.oauth2_fetch_user_details_second = true
+        SiteSetting.oauth2_user_json_url_second = "https://provider.com/user"
+        SiteSetting.oauth2_user_json_url_method_second = "GET"
+        SiteSetting.oauth2_json_email_path_second = "account.email"
       end
 
       let(:success_response) do
@@ -79,23 +79,23 @@ describe OAuth2BasicAuthenticator do
       end
 
       it "works" do
-        stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(success_response)
+        stub_request(:get, SiteSetting.oauth2_user_json_url_second).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")
 
-        SiteSetting.oauth2_user_json_url_method = "POST"
-        stub_request(:post, SiteSetting.oauth2_user_json_url).to_return(success_response)
+        SiteSetting.oauth2_user_json_url_method_second = "POST"
+        stub_request(:post, SiteSetting.oauth2_user_json_url_second).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")
       end
 
       it "returns an standardised result if the http request fails" do
-        stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(fail_response)
+        stub_request(:get, SiteSetting.oauth2_user_json_url_second).to_return(fail_response)
         result = authenticator.after_authenticate(auth)
         expect(result.failed).to eq(true)
 
-        SiteSetting.oauth2_user_json_url_method = "POST"
-        stub_request(:post, SiteSetting.oauth2_user_json_url).to_return(fail_response)
+        SiteSetting.oauth2_user_json_url_method_second = "POST"
+        stub_request(:post, SiteSetting.oauth2_user_json_url_second).to_return(fail_response)
         result = authenticator.after_authenticate(auth)
         expect(result.failed).to eq(true)
       end
@@ -116,7 +116,7 @@ describe OAuth2BasicAuthenticator do
             custom_path,
             Plugin::Instance.new,
           )
-          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(response)
+          stub_request(:get, SiteSetting.oauth2_user_json_url_second).to_return(response)
 
           result = authenticator.after_authenticate(auth)
           associated_account = UserAssociatedAccount.last
@@ -129,8 +129,8 @@ describe OAuth2BasicAuthenticator do
     describe "avatar downloading" do
       before do
         SiteSetting.queue_jobs = true
-        SiteSetting.oauth2_fetch_user_details = true
-        SiteSetting.oauth2_email_verified = true
+        SiteSetting.oauth2_fetch_user_details_second = true
+        SiteSetting.oauth2_email_verified_second = true
       end
 
       let(:job_klass) { Jobs::DownloadAvatarFromUrl }
@@ -189,7 +189,7 @@ describe OAuth2BasicAuthenticator do
   it "can walk json" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"user":{"id":1234,"email":{"address":"test@example.com"}}}'
-    SiteSetting.oauth2_json_email_path = "user.email.address"
+    SiteSetting.oauth2_json_email_path_second = "user.email.address"
     result = authenticator.json_walk({}, JSON.parse(json_string), :email)
 
     expect(result).to eq "test@example.com"
@@ -198,7 +198,7 @@ describe OAuth2BasicAuthenticator do
   it "allows keys containing dots, if wrapped in quotes" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"www.example.com/uid": "myuid"}'
-    SiteSetting.oauth2_json_user_id_path = '"www.example.com/uid"'
+    SiteSetting.oauth2_json_user_id_path_second = '"www.example.com/uid"'
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
 
     expect(result).to eq "myuid"
@@ -207,7 +207,7 @@ describe OAuth2BasicAuthenticator do
   it "allows keys containing dots, if escaped" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"www.example.com/uid": "myuid"}'
-    SiteSetting.oauth2_json_user_id_path = 'www\.example\.com/uid'
+    SiteSetting.oauth2_json_user_id_path_second = 'www\.example\.com/uid'
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
 
     expect(result).to eq "myuid"
@@ -220,7 +220,7 @@ describe OAuth2BasicAuthenticator do
     json_string = <<~'_'.chomp
       {"www.example.com/uid\\": "myuid"}
     _
-    SiteSetting.oauth2_json_user_id_path = <<~'_'.chomp
+    SiteSetting.oauth2_json_user_id_path_second = <<~'_'.chomp
       www\.example\.com/uid\\
     _
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
@@ -231,7 +231,7 @@ describe OAuth2BasicAuthenticator do
     authenticator = OAuth2BasicAuthenticator.new
     json_string =
       '{"email":"test@example.com","identities":[{"user_id":"123456789","provider":"auth0","isSocial":false}]}'
-    SiteSetting.oauth2_json_user_id_path = "identities.[].user_id"
+    SiteSetting.oauth2_json_user_id_path_second = "identities.[].user_id"
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
 
     expect(result).to eq "123456789"
@@ -240,7 +240,7 @@ describe OAuth2BasicAuthenticator do
   it "can walk json and handle an empty array" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"email":"test@example.com","identities":[]}'
-    SiteSetting.oauth2_json_user_id_path = "identities.[].user_id"
+    SiteSetting.oauth2_json_user_id_path_second = "identities.[].user_id"
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
 
     expect(result).to eq nil
@@ -249,7 +249,7 @@ describe OAuth2BasicAuthenticator do
   it "can walk json and find values by index in an array" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"emails":[{"value":"test@example.com"},{"value":"test2@example.com"}]}'
-    SiteSetting.oauth2_json_email_path = "emails[1].value"
+    SiteSetting.oauth2_json_email_path_second = "emails[1].value"
     result = authenticator.json_walk({}, JSON.parse(json_string), :email)
 
     expect(result).to eq "test2@example.com"
@@ -258,7 +258,7 @@ describe OAuth2BasicAuthenticator do
   it "can walk json and download avatar" do
     authenticator = OAuth2BasicAuthenticator.new
     json_string = '{"user":{"avatar":"http://example.com/1.png"}}'
-    SiteSetting.oauth2_json_avatar_path = "user.avatar"
+    SiteSetting.oauth2_json_avatar_path_second = "user.avatar"
     result = authenticator.json_walk({}, JSON.parse(json_string), :avatar)
 
     expect(result).to eq "http://example.com/1.png"
@@ -298,8 +298,8 @@ describe OAuth2BasicAuthenticator do
     end
 
     before(:each) do
-      SiteSetting.oauth2_callback_user_id_path = "params.info.uuid"
-      SiteSetting.oauth2_callback_user_info_paths = "name:params.info.name|email:params.info.email"
+      SiteSetting.oauth2_callback_user_id_path_second = "params.info.uuid"
+      SiteSetting.oauth2_callback_user_info_paths_second = "name:params.info.name|email:params.info.email"
     end
 
     it "can retrieve user id from access token callback" do
@@ -314,7 +314,7 @@ describe OAuth2BasicAuthenticator do
     end
 
     it "does apply user properties from access token callback in after_authenticate" do
-      SiteSetting.oauth2_fetch_user_details = true
+      SiteSetting.oauth2_fetch_user_details_second = true
       authenticator.stubs(:fetch_user_details).returns(email: "sammy@digitalocean.com")
       result = authenticator.after_authenticate(auth)
 
@@ -324,7 +324,7 @@ describe OAuth2BasicAuthenticator do
     end
 
     it "does work if user details are not fetched" do
-      SiteSetting.oauth2_fetch_user_details = false
+      SiteSetting.oauth2_fetch_user_details_second = false
       result = authenticator.after_authenticate(auth)
 
       expect(result.extra_data[:uid]).to eq "e028b1b918853eca7fba208a9d7e9d29a6e93c57"
