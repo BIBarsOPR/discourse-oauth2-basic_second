@@ -1,7 +1,7 @@
 {
-  "name": "discourse-oauth2-basic",
+  "name": "discourse-oauth2-basic_second",
   "version": "1.0.0",
-  "repository": "https://github.com/discourse/discourse-oauth2-basic",
+  "repository": "https://github.com/BIBarsOPR/discourse-oauth2-basic_second",
   "author": "Discourse",
   "license": "MIT",
   "devDependencies": {
