@@ -1,5 +1,5 @@
 en:
   js:
     login:
-      oauth2_basic:
-        name: "OAuth 2"
+      oauth2_basic_second:
+        name: "OAuth 22"
