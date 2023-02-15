@@ -10,7 +10,7 @@
 enabled_site_setting :oauth2_enabled_second
 
 class ::OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
-  option :name, "oauth2_basic"
+  option :name, "oauth2_basic_second"
 
   uid do
     if path = SiteSetting.oauth2_callback_user_id_path_second.split(".")
@@ -76,7 +76,7 @@ DiscoursePluginRegistry.define_filtered_register :oauth2_basic_additional_json_p
 
 class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   def name
-    "oauth2_basic"
+    "oauth2_basic_second"
   end
 
   def can_revoke?

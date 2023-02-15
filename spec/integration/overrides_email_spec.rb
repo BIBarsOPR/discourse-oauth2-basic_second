@@ -18,7 +18,7 @@ describe "OAuth2 Overrides Email", type: :request do
 
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:oauth2_basic] = OmniAuth::AuthHash.new(
-      provider: "oauth2_basic",
+      provider: "oauth2_basic_second",
       uid: "12345",
       info: OmniAuth::AuthHash::InfoHash.new(email: new_email),
       extra: {

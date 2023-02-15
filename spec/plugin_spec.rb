@@ -9,7 +9,7 @@ describe OAuth2BasicAuthenticator do
 
     let(:auth) do
       OmniAuth::AuthHash.new(
-        "provider" => "oauth2_basic",
+        "provider" => "oauth2_basic_second",
         "credentials" => {
           token: "token",
         },
@@ -271,7 +271,7 @@ describe OAuth2BasicAuthenticator do
 
     let(:auth) do
       OmniAuth::AuthHash.new(
-        "provider" => "oauth2_basic",
+        "provider" => "oauth2_basic_second",
         "credentials" => {
           "token" => "token",
         },
