@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-describe OAuth2BasicAuthenticator do
+describe OAuth2BasicAuthenticatorSecond do
   describe "after_authenticate" do
     let(:user) { Fabricate(:user) }
-    let(:authenticator) { OAuth2BasicAuthenticator.new }
+    let(:authenticator) { OAuth2BasicAuthenticatorSecond.new }
 
     let(:auth) do
       OmniAuth::AuthHash.new(
@@ -101,7 +101,7 @@ describe OAuth2BasicAuthenticator do
       end
 
       describe "fetch custom attributes" do
-        after { DiscoursePluginRegistry.reset_register!(:oauth2_basic_additional_json_paths) }
+        after { DiscoursePluginRegistry.reset_register!(:oauth2_basic_second_additional_json_paths) }
 
         let(:response) do
           {
@@ -187,7 +187,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "can walk json" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"user":{"id":1234,"email":{"address":"test@example.com"}}}'
     SiteSetting.oauth2_json_email_path_second = "user.email.address"
     result = authenticator.json_walk({}, JSON.parse(json_string), :email)
@@ -196,7 +196,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "allows keys containing dots, if wrapped in quotes" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"www.example.com/uid": "myuid"}'
     SiteSetting.oauth2_json_user_id_path_second = '"www.example.com/uid"'
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
@@ -205,7 +205,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "allows keys containing dots, if escaped" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"www.example.com/uid": "myuid"}'
     SiteSetting.oauth2_json_user_id_path_second = 'www\.example\.com/uid'
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
@@ -214,7 +214,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "allows keys containing literal backslashes, if escaped" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     # This 'single quoted heredoc' syntax means we don't have to escape backslashes in Ruby
     # What you see is exactly what the user would enter in the site settings
     json_string = <<~'_'.chomp
@@ -228,7 +228,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "can walk json that contains an array" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string =
       '{"email":"test@example.com","identities":[{"user_id":"123456789","provider":"auth0","isSocial":false}]}'
     SiteSetting.oauth2_json_user_id_path_second = "identities.[].user_id"
@@ -238,7 +238,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "can walk json and handle an empty array" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"email":"test@example.com","identities":[]}'
     SiteSetting.oauth2_json_user_id_path_second = "identities.[].user_id"
     result = authenticator.json_walk({}, JSON.parse(json_string), :user_id)
@@ -247,7 +247,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "can walk json and find values by index in an array" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"emails":[{"value":"test@example.com"},{"value":"test2@example.com"}]}'
     SiteSetting.oauth2_json_email_path_second = "emails[1].value"
     result = authenticator.json_walk({}, JSON.parse(json_string), :email)
@@ -256,7 +256,7 @@ describe OAuth2BasicAuthenticator do
   end
 
   it "can walk json and download avatar" do
-    authenticator = OAuth2BasicAuthenticator.new
+    authenticator = OAuth2BasicAuthenticatorSecond.new
     json_string = '{"user":{"avatar":"http://example.com/1.png"}}'
     SiteSetting.oauth2_json_avatar_path_second = "user.avatar"
     result = authenticator.json_walk({}, JSON.parse(json_string), :avatar)
@@ -266,8 +266,8 @@ describe OAuth2BasicAuthenticator do
 
   describe "token_callback" do
     let(:user) { Fabricate(:user) }
-    let(:strategy) { OmniAuth::Strategies::Oauth2Basic.new({}) }
-    let(:authenticator) { OAuth2BasicAuthenticator.new }
+    let(:strategy) { OmniAuth::Strategies::Oauth2BasicSecond.new({}) }
+    let(:authenticator) { OAuth2BasicAuthenticatorSecond.new }
 
     let(:auth) do
       OmniAuth::AuthHash.new(

@@ -2,12 +2,12 @@
 
 require "rails_helper"
 
-describe "OAuth2 Overrides Email", type: :request do
+describe "OAuth2 Second Overrides Email", type: :request do
   fab!(:initial_email) { "initial@example.com" }
   fab!(:new_email) { "new@example.com" }
   fab!(:user) { Fabricate(:user, email: initial_email) }
   fab!(:uac) do
-    UserAssociatedAccount.create!(user: user, provider_name: "oauth2_basic", provider_uid: "12345")
+    UserAssociatedAccount.create!(user: user, provider_name: "oauth2_basic_second", provider_uid: "12345")
   end
 
   before do
@@ -17,7 +17,7 @@ describe "OAuth2 Overrides Email", type: :request do
     SiteSetting.oauth2_email_verified_second = true
 
     OmniAuth.config.test_mode = true
-    OmniAuth.config.mock_auth[:oauth2_basic] = OmniAuth::AuthHash.new(
+    OmniAuth.config.mock_auth[:oauth2_basic_second] = OmniAuth::AuthHash.new(
       provider: "oauth2_basic_second",
       uid: "12345",
       info: OmniAuth::AuthHash::InfoHash.new(email: new_email),
@@ -31,7 +31,7 @@ describe "OAuth2 Overrides Email", type: :request do
   it "doesn't update email by default" do
     expect(user.reload.email).to eq(initial_email)
 
-    get "/auth/oauth2_basic/callback"
+    get "/auth/oauth2_basic_second/callback"
     expect(response.status).to eq(302)
     expect(session[:current_user_id]).to eq(user.id)
 
@@ -41,7 +41,7 @@ describe "OAuth2 Overrides Email", type: :request do
   it "updates user email if enabled" do
     SiteSetting.oauth2_overrides_email_second = true
 
-    get "/auth/oauth2_basic/callback"
+    get "/auth/oauth2_basic_second/callback"
     expect(response.status).to eq(302)
     expect(session[:current_user_id]).to eq(user.id)
 

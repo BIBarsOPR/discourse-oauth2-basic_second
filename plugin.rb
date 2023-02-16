@@ -9,7 +9,7 @@
 
 enabled_site_setting :oauth2_enabled_second
 
-class ::OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
+class ::OmniAuth::Strategies::Oauth2BasicSecond < ::OmniAuth::Strategies::OAuth2
   option :name, "oauth2_basic_second"
 
   uid do
@@ -49,7 +49,7 @@ require "faraday/logging/formatter"
 class OAuth2FaradayFormatter < Faraday::Logging::Formatter
   def request(env)
     warn <<~LOG
-      OAuth2 Debugging: request #{env.method.upcase} #{env.url.to_s}
+      OAuth2 Second Debugging: request #{env.method.upcase} #{env.url.to_s}
 
       Headers: #{env.request_headers}
 
@@ -59,7 +59,7 @@ class OAuth2FaradayFormatter < Faraday::Logging::Formatter
 
   def response(env)
     warn <<~LOG
-      OAuth2 Debugging: response status #{env.status}
+      OAuth2 Second Debugging: response status #{env.status}
 
       From #{env.method.upcase} #{env.url.to_s}
 
@@ -72,9 +72,9 @@ end
 
 # You should use this register if you want to add custom paths to traverse the user details JSON.
 # We'll store the value in the user associated account's extra attribute hash using the full path as the key.
-DiscoursePluginRegistry.define_filtered_register :oauth2_basic_additional_json_paths
+DiscoursePluginRegistry.define_filtered_register :oauth2_basic_second_additional_json_paths
 
-class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
+class ::OAuth2BasicAuthenticatorSecond < Auth::ManagedAuthenticator
   def name
     "oauth2_basic_second"
   end
@@ -88,7 +88,7 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider :oauth2_basic,
+    omniauth.provider :oauth2_basic_second,
                       name: name,
                       setup:
                         lambda { |env|
@@ -216,7 +216,7 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   end
 
   def log(info)
-    Rails.logger.warn("OAuth2 Debugging: #{info}") if SiteSetting.oauth2_debug_auth_second
+    Rails.logger.warn("OAuth2 Second Debugging: #{info}") if SiteSetting.oauth2_debug_auth_second
   end
 
   def fetch_user_details(token, id)
@@ -246,7 +246,7 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
         json_walk(result, user_json, :email_verified)
         json_walk(result, user_json, :avatar)
 
-        DiscoursePluginRegistry.oauth2_basic_additional_json_paths.each do |detail|
+        DiscoursePluginRegistry.oauth2_basic_second_additional_json_paths.each do |detail|
           prop = "extra:#{detail}"
           json_walk(result, user_json, prop, custom_path: detail)
         end
@@ -287,7 +287,7 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
           ]
         end
 
-        DiscoursePluginRegistry.oauth2_basic_additional_json_paths.each do |detail|
+        DiscoursePluginRegistry.oauth2_basic_second_additional_json_paths.each do |detail|
           auth["extra"][detail] = fetched_user_details["extra:#{detail}"]
         end
       else
@@ -306,9 +306,9 @@ class ::OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   end
 end
 
-auth_provider title_setting: "oauth2_button_title_second", authenticator: OAuth2BasicAuthenticator.new
+auth_provider title_setting: "oauth2_button_title_second", authenticator: OAuth2BasicAuthenticatorSecond.new
 
 load File.expand_path(
-       "../lib/validators/oauth2_basic/oauth2_fetch_user_details_validator.rb",
+       "../lib/validators/oauth2_basic_second/oauth2_fetch_user_details_validator.rb",
        __FILE__,
      )
